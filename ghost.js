@@ -491,28 +491,18 @@ const blit = (() => {
     }
 })();
 
-const phrase = "Amour";
-const reducer = (previousValue, currentValue) => previousValue + currentValue;
-function generationScore(){
+const bouton = document.querySelector("#bouton");
+const content = document.querySelector('#content');
 
-    let scoreArray = [];
-    let score;
-    for(let i = 0; i < phrase.length; i++)
-    {
-        scoreArray.push(phrase.charCodeAt(i));
-    }
-    //console.log(scoreArray);
-    score = scoreArray.reduce(reducer);
-    //console.log(score);
-}
+bouton.addEventListener("click",function () {
+    content.style.display="none";
+    multipleSplats(1);
+    update();
+})
 
-generationScore();
+//multipleSplats(1);
+//update();
 
-//let lastTime = Date.now();
-//Affichage au lancement
-//multipleSplats(parseInt(Math.random() * 20) + 5);
-multipleSplats(1);
-update();
 
 function update () {
     resizeCanvas();
@@ -541,13 +531,13 @@ function update () {
     blit(density.write[1]);
     density.swap();
 
-    /*for (let i = 0; i < pointers.length; i++) {
+    for (let i = 0; i < pointers.length; i++) {
         const pointer = pointers[i];
         if (pointer.moved) {
             splat(pointer.x, pointer.y, pointer.dx, pointer.dy, pointer.color);
             pointer.moved = false;
         }
-    }*/
+    }
     const pointer = pointers[0];
     if (pointer.moved) {
         splat(pointer.x, pointer.y, pointer.dx, pointer.dy, pointer.color);
@@ -620,15 +610,14 @@ function splat (x, y, dx, dy, color) {
     velocity.swap();
 
     gl.uniform1i(splatProgram.uniforms.uTarget, density.read[2]);
-    gl.uniform3f(splatProgram.uniforms.color, color[0] * 0.3, color[1] * 0.3, color[2] * 0.3);
+    gl.uniform3f(splatProgram.uniforms.color, color[0] * 0.5, color[1] * 0.5, color[2] * 0.5);
     blit(density.write[1]);
     density.swap();
 }
 
 function multipleSplats (amount) {
     for (let i = 0; i < amount; i++) {
-        //const color = [Math.random() * 10, Math.random() * 10, Math.random() * 10];
-        const color = [10, 10, 10];
+        const color = [Math.random() * 10, Math.random() * 10, Math.random() * 10];
         //const x = canvas.width * Math.random();
         const x = canvas.width / 2;
         //const y = canvas.height * Math.random();
@@ -647,55 +636,3 @@ function resizeCanvas () {
     }
 }
 
-/*canvas.addEventListener('mousemove', (e) => {
-    pointers[0].moved = pointers[0].down;
-    pointers[0].dx = (e.offsetX - pointers[0].x) * 10.0;
-    pointers[0].dy = (e.offsetY - pointers[0].y) * 10.0;
-    pointers[0].x = e.offsetX;
-    pointers[0].y = e.offsetY;
-});
-
-canvas.addEventListener('touchmove', (e) => {
-    e.preventDefault();
-    const touches = e.targetTouches;
-    for (let i = 0; i < touches.length; i++) {
-        let pointer = pointers[i];
-        pointer.moved = pointer.down;
-        pointer.dx = (touches[i].pageX - pointer.x) * 10.0;
-        pointer.dy = (touches[i].pageY - pointer.y) * 10.0;
-        pointer.x = touches[i].pageX;
-        pointer.y = touches[i].pageY;
-    }
-}, false);
-
-canvas.addEventListener('mousedown', () => {
-    pointers[0].down = true;
-    pointers[0].color = [Math.random() + 0.2, Math.random() + 0.2, Math.random() + 0.2];
-});
-
-canvas.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    const touches = e.targetTouches;
-    for (let i = 0; i < touches.length; i++) {
-        if (i >= pointers.length)
-            pointers.push(new pointerPrototype());
-
-        pointers[i].id = touches[i].identifier;
-        pointers[i].down = true;
-        pointers[i].x = touches[i].pageX;
-        pointers[i].y = touches[i].pageY;
-        pointers[i].color = [Math.random() + 0.2, Math.random() + 0.2, Math.random() + 0.2];
-    }
-});
-
-window.addEventListener('mouseup', () => {
-    pointers[0].down = false;
-});
-
-window.addEventListener('touchend', (e) => {
-    const touches = e.changedTouches;
-    for (let i = 0; i < touches.length; i++)
-        for (let j = 0; j < pointers.length; j++)
-            if (touches[i].identifier == pointers[j].id)
-                pointers[j].down = false;
-});*/
