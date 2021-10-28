@@ -5,13 +5,13 @@ canvas.width = canvas.clientWidth;
 canvas.height = canvas.clientHeight;
 
 let config = {
-    TEXTURE_DOWNSAMPLE: 1,
-    DENSITY_DISSIPATION: 0.98,
-    VELOCITY_DISSIPATION: 0.99,
-    PRESSURE_DISSIPATION: 0.8,
-    PRESSURE_ITERATIONS: 25,
-    CURL: 30,
-    SPLAT_RADIUS: 0.005
+    TEXTURE_DOWNSAMPLE: 1,//1,
+    DENSITY_DISSIPATION: 1,//0.98,
+    VELOCITY_DISSIPATION: 1.005,//0.99,
+    PRESSURE_DISSIPATION: .8,//0.8,
+    PRESSURE_ITERATIONS: 25,//25,
+    CURL: 30,//30,
+    SPLAT_RADIUS: 0.005//0.005
 }
 
 let pointers = [];
@@ -491,17 +491,35 @@ const blit = (() => {
     }
 })();
 
+const phrase = "Amour";
+const reducer = (previousValue, currentValue) => previousValue + currentValue;
+function generationScore(){
 
-let lastTime = Date.now();
+    let scoreArray = [];
+    let score;
+    for(let i = 0; i < phrase.length; i++)
+    {
+        scoreArray.push(phrase.charCodeAt(i));
+    }
+    //console.log(scoreArray);
+    score = scoreArray.reduce(reducer);
+    //console.log(score);
+}
+
+generationScore();
+
+//let lastTime = Date.now();
 //Affichage au lancement
-multipleSplats(parseInt(Math.random() * 20) + 5);
+//multipleSplats(parseInt(Math.random() * 20) + 5);
+multipleSplats(1);
 update();
 
 function update () {
     resizeCanvas();
 
-    const dt = Math.min((Date.now() - lastTime) / 1000, 0.016);
-    lastTime = Date.now();
+    //const dt = Math.min((Date.now() - lastTime) / 1000, 0.016);
+    const dt = .0088;
+    //lastTime = Date.now();
 
     gl.viewport(0, 0, textureWidth, textureHeight);
 
@@ -523,12 +541,17 @@ function update () {
     blit(density.write[1]);
     density.swap();
 
-    for (let i = 0; i < pointers.length; i++) {
+    /*for (let i = 0; i < pointers.length; i++) {
         const pointer = pointers[i];
         if (pointer.moved) {
             splat(pointer.x, pointer.y, pointer.dx, pointer.dy, pointer.color);
             pointer.moved = false;
         }
+    }*/
+    const pointer = pointers[0];
+    if (pointer.moved) {
+        splat(pointer.x, pointer.y, pointer.dx, pointer.dy, pointer.color);
+        pointer.moved = false;
     }
 
     curlProgram.bind();
@@ -604,9 +627,12 @@ function splat (x, y, dx, dy, color) {
 
 function multipleSplats (amount) {
     for (let i = 0; i < amount; i++) {
-        const color = [Math.random() * 10, Math.random() * 10, Math.random() * 10];
-        const x = canvas.width * Math.random();
-        const y = canvas.height * Math.random();
+        //const color = [Math.random() * 10, Math.random() * 10, Math.random() * 10];
+        const color = [10, 10, 10];
+        //const x = canvas.width * Math.random();
+        const x = canvas.width / 2;
+        //const y = canvas.height * Math.random();
+        const y = canvas.height / 2;
         const dx = 1000 * (Math.random() - 0.5);
         const dy = 1000 * (Math.random() - 0.5);
         splat(x, y, dx, dy, color);
@@ -627,9 +653,9 @@ function resizeCanvas () {
     pointers[0].dy = (e.offsetY - pointers[0].y) * 10.0;
     pointers[0].x = e.offsetX;
     pointers[0].y = e.offsetY;
-});*/
+});
 
-/*canvas.addEventListener('touchmove', (e) => {
+canvas.addEventListener('touchmove', (e) => {
     e.preventDefault();
     const touches = e.targetTouches;
     for (let i = 0; i < touches.length; i++) {
@@ -640,14 +666,14 @@ function resizeCanvas () {
         pointer.x = touches[i].pageX;
         pointer.y = touches[i].pageY;
     }
-}, false);*/
+}, false);
 
-/*canvas.addEventListener('mousedown', () => {
+canvas.addEventListener('mousedown', () => {
     pointers[0].down = true;
     pointers[0].color = [Math.random() + 0.2, Math.random() + 0.2, Math.random() + 0.2];
-});*/
+});
 
-/*canvas.addEventListener('touchstart', (e) => {
+canvas.addEventListener('touchstart', (e) => {
     e.preventDefault();
     const touches = e.targetTouches;
     for (let i = 0; i < touches.length; i++) {
@@ -660,13 +686,13 @@ function resizeCanvas () {
         pointers[i].y = touches[i].pageY;
         pointers[i].color = [Math.random() + 0.2, Math.random() + 0.2, Math.random() + 0.2];
     }
-});*/
+});
 
-/*window.addEventListener('mouseup', () => {
+window.addEventListener('mouseup', () => {
     pointers[0].down = false;
-});*/
+});
 
-/*window.addEventListener('touchend', (e) => {
+window.addEventListener('touchend', (e) => {
     const touches = e.changedTouches;
     for (let i = 0; i < touches.length; i++)
         for (let j = 0; j < pointers.length; j++)
