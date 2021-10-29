@@ -5,9 +5,10 @@ html, body {
 body {
     margin: 0;
     height: 100vh;
+    background-color: black;
 }
 
-#content {
+#button-container {
     height: 100vh;
     display: flex;
     align-items: center;

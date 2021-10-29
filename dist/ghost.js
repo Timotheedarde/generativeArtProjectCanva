@@ -1,5 +1,11 @@
 'use strict';
 
+function getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min +1)) + min;
+}
+
 const canvas = document.getElementsByTagName('canvas')[0];
 canvas.width = canvas.clientWidth;
 canvas.height = canvas.clientHeight;
@@ -7,11 +13,11 @@ canvas.height = canvas.clientHeight;
 let config = {
     TEXTURE_DOWNSAMPLE: 1,//1,
     DENSITY_DISSIPATION: 1,//0.98,
-    VELOCITY_DISSIPATION: 1.005,//0.99,
+    VELOCITY_DISSIPATION: 0.9999,//0.99,
     PRESSURE_DISSIPATION: .8,//0.8,
-    PRESSURE_ITERATIONS: 25,//25,
-    CURL: 30,//30,
-    SPLAT_RADIUS: 0.005//0.005
+    PRESSURE_ITERATIONS: getRandomIntInclusive(20, 30),//25,
+    CURL: getRandomIntInclusive(15, 100),//30,
+    SPLAT_RADIUS: 0.05//0.005
 }
 
 let pointers = [];
@@ -492,7 +498,7 @@ const blit = (() => {
 })();
 
 const bouton = document.querySelector("#bouton");
-const content = document.querySelector('#content');
+const content = document.querySelector('#button-container');
 
 bouton.addEventListener("click",function () {
     content.style.display="none";
@@ -508,7 +514,7 @@ function update () {
     resizeCanvas();
 
     //const dt = Math.min((Date.now() - lastTime) / 1000, 0.016);
-    const dt = .0088;
+    const dt = .003999;
     //lastTime = Date.now();
 
     gl.viewport(0, 0, textureWidth, textureHeight);
